@@ -43,7 +43,7 @@ def divide(x, y):
 num_1 = 10
 num_2 = 5
 
-#Log info to the console
+#Log info directly to the console or a file
 add_result = add(num_1, num_2)
 logging.debug(f'Add {num_1} + {num_2} = {add_result}')
 sub_result = subtract(num_1, num_2)

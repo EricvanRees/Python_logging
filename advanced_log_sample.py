@@ -1,7 +1,16 @@
 """
-Setting up loggers for each module is required when using imported modules, such as employee
+Setting up loggers for each module is required when using imported modules, such as employee. 
 If not, both modules share the same root logger in a single log file. This is not what you want as the root file has the wrong formatting and log levels. Loggers set up separate log files. 
+
+This gives you more flexibility for setting different log levels too: setting up log levels happens on file handlers, for example:
+file_handler = logging.FileHandler('sample.log') * existing
+-> file_handler.setLevel(logging.ERROR)
+file_handler.setFormatter(formatter) * existing
+
+You can also add multiple handlers to a logger
 """
+
+# importing the advanced_employee runs it, so it also creates a log file
 
 import logging
 import advanced_employee
@@ -13,10 +22,17 @@ logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('%(asctime)s:%(name)s:%(message)s')
 
+# addnew streamhandler for console logs in addition to log file
+stream_handler = logging.StreamHandler()
+
 file_handler = logging.FileHandler('sample.log')
 file_handler.setFormatter(formatter)
+# set formatter to new streamhandler
+stream_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
+# add new streamhandler
+logger.addHandler(stream_handler)
 
 
 def add(x, y):
@@ -33,7 +49,13 @@ def multiply(x, y):
 
 def divide(x, y):
   """Divide function"""
-  return x / y
+  try:
+    result =  x / y
+    # includes tracebacks in logger file:
+  except ZeroDivisionError:
+    logger.exception('Tried to divide by zero')
+  else:
+    return result
 
 num_1 = 10
 num_2 = 5
